@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AudioBoost Pro - Monitor & Amplificatore Cuffie</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            dark: {
+              950: '#07090e',
+              900: '#0d111a',
+              850: '#121724',
+              800: '#192033',
+              700: '#26314c',
+            },
+            accent: {
+              cyan: '#06b6d4',
+              teal: '#14b8a6',
+              emerald: '#10b981',
+              amber: '#f59e0b',
+              rose: '#f43f5e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom Range Sliders */
+    input[type=range] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type=range]:focus {
+      outline: none;
+    }
+    /* Webkit Slider Thumb */
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 22px;
+      width: 22px;
+      border-radius: 50%;
+      background: #06b6d4;
+      box-shadow: 0 0 12px rgba(6, 182, 212, 0.75), inset 0 0 4px #ffffff;
+      border: 2px solid #ffffff;
+      margin-top: -8px;
+      transition: transform 0.15s ease, background-color 0.15s ease;
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+      background: #22d3ee;
+    }
+    input[type=range]::-webkit-slider-thumb:active {
+      transform: scale(0.95);
+      box-shadow: 0 0 18px rgba(6, 182, 212, 1);
+    }
+    /* Webkit Slider Track */
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 6px;
+      background: #1e293b;
+      border-radius: 9999px;
+      border: 1px solid #334155;
+    }
+    /* Firefox Slider Thumb */
+    input[type=range]::-moz-range-thumb {
+      height: 22px;
+      width: 22px;
+      border-radius: 50%;
+      background: #06b6d4;
+      box-shadow: 0 0 12px rgba(6, 182, 212, 0.75), inset 0 0 4px #ffffff;
+      border: 2px solid #ffffff;
+      transition: transform 0.15s ease;
+    }
+    input[type=range]::-moz-range-track {
+      width: 100%;
+      height: 6px;
+      background: #1e293b;
+      border-radius: 9999px;
+      border: 1px solid #334155;
+    }
+    /* Accent Rose Slider */
+    .slider-rose::-webkit-slider-thumb {
+      background: #f43f5e !important;
+      box-shadow: 0 0 12px rgba(244, 63, 94, 0.75), inset 0 0 4px #ffffff !important;
+    }
+    .slider-rose::-moz-range-thumb {
+      background: #f43f5e !important;
+    }
+    /* Glow Animations */
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.7; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); }
+    }
+    .glow-active {
+      animation: pulse-glow 2.5s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-dark-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-cyan-500 selection:text-white pb-12">
+
+  <header class="border-b border-dark-800 bg-dark-900/80 backdrop-blur-md sticky top-0 z-40 px-4 py-3 sm:px-6">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-teal-400 p-[1px] flex items-center justify-center shadow-lg shadow-cyan-500/20">
+          <div class="w-full h-full bg-dark-950 rounded-[11px] flex items-center justify-center">
+            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
+            </svg>
+          </div>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+            AudioBoost <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-mono border border-cyan-500/30">PRO</span>
+          </h1>
+          <p class="text-xs text-slate-400 font-medium hidden sm:block">Monitor & Amplificatore Cuffie Bluetooth / Telefono</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Latency / Engine Status Badge -->
+        <div id="statusBadge" class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-dark-850 border border-dark-700 text-xs text-slate-300 font-mono">
+          <span id="statusDot" class="w-2 h-2 rounded-full bg-slate-500"></span>
+          <span id="statusText">Disattivato</span>
+        </div>
+
+        <!-- Emergency Mute Button -->
+        <button id="quickMuteBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-dark-800 hover:bg-rose-950/40 text-rose-400 border border-rose-900/40 text-xs font-semibold transition active:scale-95">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+          </svg>
+          <span class="hidden sm:inline">Muto Rapido</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Safety Banner (Feedback / Larsen Prevention) -->
+  <div class="max-w-6xl mx-auto px-4 mt-4">
+    <div class="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3.5 sm:p-4 text-amber-200 text-xs sm:text-sm flex items-start gap-3 shadow-inner">
+      <svg class="w-5 h-5 text-amber-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+      </svg>
+      <div>
+        <span class="font-bold text-amber-300">Avviso Anti-Fischio (Feedback):</span> 
+        Usa sempre <strong class="text-white underline decoration-amber-400">cuffie o auricolari</strong> (Bluetooth o cavo). L'uso degli altoparlanti integrati del telefono o PC mentre il microfono è attivo causerà un forte fischio di ritorno acustico.
+      </div>
+    </div>
+  </div>
+
+  <main class="max-w-6xl mx-auto px-4 mt-5 space-y-5">
+    
+    <!-- Hero Control Bar (Start/Stop) -->
+    <div class="bg-gradient-to-r from-dark-900 via-dark-850 to-dark-900 border border-dark-800 rounded-2xl p-4 sm:p-6 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-4 w-full md:w-auto">
+        <button id="toggleEngineBtn" class="w-full md:w-auto px-8 py-4 rounded-xl bg-cyan-500 hover:bg-cyan-400 active:scale-98 text-dark-950 font-bold text-base shadow-lg shadow-cyan-500/30 flex items-center justify-center gap-3 transition-all duration-200">
+          <svg id="playIcon" class="w-6 h-6 text-dark-950" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+          <svg id="stopIcon" class="w-6 h-6 text-dark-950 hidden" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M6 6h12v12H6z"/>
+          </svg>
+          <span id="toggleBtnText">AVVIA ASCOLTO MICROFONO</span>
+        </button>
+
+        <div class="hidden lg:block text-xs text-slate-400 border-l border-dark-700 pl-4 space-y-0.5">
+          <div class="text-slate-300 font-semibold">Web Audio Engine</div>
+          <div id="sampleRateLabel">Sample Rate: -- kHz</div>
+          <div id="latencyLabel">Latenza: -- ms</div>
+        </div>
+      </div>
+
+      <!-- Quick Status Indicators -->
+      <div class="flex items-center justify-between w-full md:w-auto gap-4 bg-dark-950/60 p-2.5 rounded-xl border border-dark-800">
+        <div class="text-center px-2">
+          <div class="text-[10px] uppercase font-mono tracking-wider text-slate-400">Clip / Picco</div>
+          <div id="clipPill" class="mt-1 px-2.5 py-0.5 rounded text-[11px] font-bold font-mono bg-dark-800 text-slate-500 border border-dark-700">OK</div>
+        </div>
+        <div class="w-px h-8 bg-dark-800"></div>
+        <div class="text-center px-2">
+          <div class="text-[10px] uppercase font-mono tracking-wider text-slate-400">Guadagno Mic</div>
+          <div id="activeGainPill" class="mt-1 px-2 py-0.5 rounded text-[11px] font-bold font-mono text-cyan-400 bg-cyan-950/40 border border-cyan-800/40">1.0x (0 dB)</div>
+        </div>
+        <div class="w-px h-8 bg-dark-800"></div>
+        <div class="text-center px-2">
+          <div class="text-[10px] uppercase font-mono tracking-wider text-slate-400">Volume Out</div>
+          <div id="activeVolPill" class="mt-1 px-2 py-0.5 rounded text-[11px] font-bold font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-800/40">80%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+      
+      <!-- LEFT / TOP PANEL: Hardware Routing & Knobs (5 Cols) -->
+      <div class="lg:col-span-5 space-y-5">
+        
+        <!-- Devices Selection Card -->
+        <div class="bg-dark-900 border border-dark-800 rounded-2xl p-5 shadow-lg space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-dark-800">
+            <h2 class="text-sm font-semibold text-white uppercase tracking-wider flex items-center gap-2">
+              <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+              </svg>
+              Sorgente & Destinazione
+            </h2>
+            <button id="refreshDevicesBtn" title="Aggiorna lista dispositivi" class="p-1.5 rounded-lg bg-dark-800 hover:bg-dark-700 text-slate-300 text-xs flex items-center gap-1 transition">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+              </svg>
+              <span>Scan</span>
+            </button>
+          </div>
+
+          <!-- Input Selector (Mic / BT) -->
+          <div class="space-y-1.5">
+            <label for="audioInputSelect" class="text-xs font-medium text-slate-300 flex items-center justify-between">
+              <span class="flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-cyan-400"></span> Microfono Ingresso
+              </span>
+              <span class="text-[10px] text-slate-500">Bluetooth o Integrato</span>
+            </label>
+            <select id="audioInputSelect" class="w-full bg-dark-950 border border-dark-700 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-cyan-500 font-medium">
+              <option value="">Rilevamento microfoni in corso...</option>
+            </select>
+          </div>
+
+          <!-- Output Selector (SinkId) -->
+          <div class="space-y-1.5">
+            <label for="audioOutputSelect" class="text-xs font-medium text-slate-300 flex items-center justify-between">
+              <span class="flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Dispositivo Uscita
+              </span>
+              <span id="outputSupportNotice" class="text-[10px] text-slate-500">Cuffie / Speaker</span>
+            </label>
+            <select id="audioOutputSelect" class="w-full bg-dark-950 border border-dark-700 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-emerald-500 font-medium">
+              <option value="">Uscita predefinita del sistema</option>
+            </select>
+            <p id="sinkIdNotice" class="text-[11px] text-slate-500 italic hidden">Nota: Il tuo browser delega l'uscita alla selezione di sistema o Bluetooth del dispositivo.</p>
+          </div>
+        </div>
+
+        <!-- Levels and Gain Sliders Card -->
+        <div class="bg-dark-900 border border-dark-800 rounded-2xl p-5 shadow-lg space-y-6">
+          <h2 class="text-sm font-semibold text-white uppercase tracking-wider flex items-center gap-2 pb-3 border-b border-dark-800">
+            <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+            Guadagno & Amplificazione
+          </h2>
+
+          <!-- Mic Gain Slider (0x to 8x / +18dB) -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-semibold text-slate-200">Guadagno Microfono (Boost)</span>
+                <span id="gainValueBadge" class="text-[11px] font-mono px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800/60 font-bold">1.0x (100%)</span>
+              </div>
+              <button id="resetGainBtn" class="text-[10px] text-slate-400 hover:text-slate-200 underline">Reset (1x)</button>
+            </div>
+            <input type="range" id="micGainSlider" min="0" max="6" step="0.05" value="1" class="w-full">
+            <div class="flex justify-between text-[10px] font-mono text-slate-500">
+              <span>0x (Muto)</span>
+              <span>1x (Normale)</span>
+              <span>3x</span>
+              <span class="text-amber-400 font-bold">6x (Super Boost)</span>
+            </div>
+          </div>
+
+          <!-- Master Output Volume Slider -->
+          <div class="space-y-2 pt-2 border-t border-dark-800/70">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-semibold text-slate-200">Volume Uscita Master</span>
+                <span id="volValueBadge" class="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800/60 font-bold">80%</span>
+              </div>
+              <button id="muteBtn" class="text-[11px] px-2 py-0.5 rounded bg-dark-800 text-slate-300 hover:text-white border border-dark-700">Muto</button>
+            </div>
+            <input type="range" id="outputVolumeSlider" min="0" max="1" step="0.01" value="0.8" class="w-full">
+            <div class="flex justify-between text-[10px] font-mono text-slate-500">
+              <span>0%</span>
+              <span>25%</span>
+              <span>50%</span>
+              <span>75%</span>
+              <span>100%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DSP & Filter Controls Card -->
+        <div class="bg-dark-900 border border-dark-800 rounded-2xl p-5 shadow-lg space-y-4">
+          <h2 class="text-sm font-semibold text-white uppercase tracking-wider flex items-center gap-2 pb-2 border-b border-dark-800">
+            <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+            </svg>
+            Filtri Ottimizzazione Voce
+          </h2>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <!-- High Pass (Bass Cut) -->
+            <label class="flex items-center justify-between p-3 rounded-xl bg-dark-950 border border-dark-800 cursor-pointer hover:border-dark-700 transition">
+              <div>
+                <div class="text-xs font-medium text-slate-200">Taglio Bassi (Anti-Rombo)</div>
+                <div class="text-[10px] text-slate-500">High-pass 120Hz</div>
+              </div>
+              <input type="checkbox" id="highPassToggle" class="w-4 h-4 accent-cyan-500 rounded cursor-pointer" checked>
+            </label>
+
+            <!-- Voice Clarity Boost EQ -->
+            <label class="flex items-center justify-between p-3 rounded-xl bg-dark-950 border border-dark-800 cursor-pointer hover:border-dark-700 transition">
+              <div>
+                <div class="text-xs font-medium text-slate-200">Chiarezza Parlato</div>
+                <div class="text-[10px] text-slate-500">Enfasi frequenze 2.5kHz</div>
+              </div>
+              <input type="checkbox" id="clarityToggle" class="w-4 h-4 accent-cyan-500 rounded cursor-pointer" checked>
+            </label>
+
+            <!-- Hardware Echo Cancellation -->
+            <label class="flex items-center justify-between p-3 rounded-xl bg-dark-950 border border-dark-800 cursor-pointer hover:border-dark-700 transition">
+              <div>
+                <div class="text-xs font-medium text-slate-200">Cancellazione Eco</div>
+                <div class="text-[10px] text-slate-500">Echo Cancellation nativo</div>
+              </div>
+              <input type="checkbox" id="echoCancellationToggle" class="w-4 h-4 accent-cyan-500 rounded cursor-pointer" checked>
+            </label>
+
+            <!-- Hardware Noise Suppression -->
+            <label class="flex items-center justify-between p-3 rounded-xl bg-dark-950 border border-dark-800 cursor-pointer hover:border-dark-700 transition">
+              <div>
+                <div class="text-xs font-medium text-slate-200">Riduzione Rumore</div>
+                <div class="text-[10px] text-slate-500">Noise Suppression microfonica</div>
+              </div>
+              <input type="checkbox" id="noiseSuppressionToggle" class="w-4 h-4 accent-cyan-500 rounded cursor-pointer" checked>
+            </label>
+          </div>
+          <p class="text-[10px] text-slate-500 italic">I filtri hardware (Eco/Rumore) si applicano al riavvio del flusso.</p>
+        </div>
+
+      </div>
+
+      <!-- RIGHT PANEL: Visualizers & Meters (7 Cols) -->
+      <div class="lg:col-span-7 space-y-5">
+        
+        <!-- Live Waveform & Frequency Spectrogram -->
+        <div class="bg-dark-900 border border-dark-800 rounded-2xl p-5 shadow-lg space-y-4">
+          <div class="flex items-center justify-between pb-2 border-b border-dark-800">
+            <h2 class="text-sm font-semibold text-white uppercase tracking-wider flex items-center gap-2">
+              <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
+              </svg>
+              Visualizzatore Real-Time (Oscilloscopio & Spettro)
+            </h2>
+            <div class="flex items-center gap-1 bg-dark-950 p-1 rounded-lg border border-dark-800 text-xs">
+              <button id="vizWaveMode" class="px-2.5 py-1 rounded-md font-medium text-cyan-400 bg-dark-800 shadow-sm transition">Onda</button>
+              <button id="vizFreqMode" class="px-2.5 py-1 rounded-md font-medium text-slate-400 hover:text-slate-200 transition">Spettro</button>
+            </div>
+          </div>
+
+          <!-- Canvas Container -->
+          <div class="relative w-full h-56 sm:h-64 rounded-xl bg-dark-950 border border-dark-800 overflow-hidden flex items-center justify-center">
+            <canvas id="visualizerCanvas" class="w-full h-full block"></canvas>
+            <div id="idleOverlay" class="absolute inset-0 flex flex-col items-center justify-center bg-dark-950/80 backdrop-blur-xs text-center p-4">
+              <div class="w-12 h-12 rounded-full bg-dark-900 border border-dark-700 flex items-center justify-center text-slate-500 mb-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
+                </svg>
+              </div>
+              <p class="text-sm font-semibold text-slate-300">In attesa dell'avvio</p>
+              <p class="text-xs text-slate-500 mt-1 max-w-xs">Premi "Avvia Ascolto Microfono" per visualizzare l'onda e monitorare l'audio in tempo reale.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- VU Meter & Decibels Card -->
+        <div class="bg-dark-900 border border-dark-800 rounded-2xl p-5 shadow-lg space-y-4">
+          <div class="flex items-center justify-between pb-2 border-b border-dark-800">
+            <h2 class="text-sm font-semibold text-white uppercase tracking-wider flex items-center gap-2">
+              <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+              </svg>
+              VU Meter & Monitor di Livello (dBFS)
+            </h2>
+            <div id="dbReadout" class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-dark-950 border border-dark-800 text-slate-400">
+              -&infin; dB
+            </div>
+          </div>
+
+          <!-- Stereo / Multi Bar Level -->
+          <div class="space-y-3">
+            <div>
+              <div class="flex justify-between text-[10px] text-slate-400 font-mono mb-1">
+                <span>-60 dB</span>
+                <span>-36 dB</span>
+                <span>-18 dB</span>
+                <span class="text-amber-400">-6 dB</span>
+                <span class="text-rose-400 font-bold">0 dB CLIP</span>
+              </div>
+              <!-- Meter Bar Track -->
+              <div class="h-5 w-full bg-dark-950 border border-dark-800 rounded-lg p-1 relative overflow-hidden flex items-center">
+                <div id="vuMeterFill" class="h-full rounded-sm bg-gradient-to-r from-emerald-500 via-amber-400 to-rose-500 transition-all duration-75 ease-out" style="width: 0%;"></div>
+                <!-- Peak Hold Line -->
+                <div id="peakHoldIndicator" class="absolute top-0 bottom-0 w-1 bg-white shadow-sm transition-all" style="left: 0%; opacity: 0;"></div>
+              </div>
+            </div>
+
+            <!-- Helpful Usage Info -->
+            <div class="p-3 bg-dark-950/60 rounded-xl border border-dark-800 text-xs text-slate-400 space-y-1.5">
+              <div class="flex items-center gap-2 text-slate-300 font-semibold">
+                <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Come ottenere il massimo:
+              </div>
+              <ul class="list-disc list-inside space-y-1 text-slate-400">
+                <li>Collega le tue cuffie Bluetooth o auricolari prima di avviare il monitor.</li>
+                <li>Seleziona il microfono corrispondente nel menù a tendina.</li>
+                <li>Alza il <span class="text-cyan-300 font-medium">Guadagno Microfono</span> se la sorgente è lontana o la voce è debole.</li>
+                <li>Regola il <span class="text-emerald-300 font-medium">Volume Uscita</span> a un livello confortevole per proteggere l'udito.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    /* AudioBoost Engine State */
+    const state = {
+      isRunning: false,
+      audioCtx: null,
+      inputStream: null,
+      sourceNode: null,
+      highPassFilter: null,
+      speechFilter: null,
+      micGainNode: null,
+      masterGainNode: null,
+      analyserNode: null,
+      audioElement: null, // Used for setSinkId routing when supported
+      rafId: null,
+      vizMode: 'wave', // 'wave' or 'freq'
+      peakVal: 0,
+      peakTimer: null,
+      isMuted: false,
+      previousVolume: 0.8,
+      selectedInputDeviceId: '',
+      selectedOutputDeviceId: '',
+    };
+
+    /* DOM Elements */
+    const toggleEngineBtn = document.getElementById('toggleEngineBtn');
+    const toggleBtnText = document.getElementById('toggleBtnText');
+    const playIcon = document.getElementById('playIcon');
+    const stopIcon = document.getElementById('stopIcon');
+    const statusBadge = document.getElementById('statusBadge');
+    const statusDot = document.getElementById('statusDot');
+    const statusText = document.getElementById('statusText');
+    const quickMuteBtn = document.getElementById('quickMuteBtn');
+    const muteBtn = document.getElementById('muteBtn');
+    const resetGainBtn = document.getElementById('resetGainBtn');
+    const audioInputSelect = document.getElementById('audioInputSelect');
+    const audioOutputSelect = document.getElementById('audioOutputSelect');
+    const refreshDevicesBtn = document.getElementById('refreshDevicesBtn');
+    const micGainSlider = document.getElementById('micGainSlider');
+    const gainValueBadge = document.getElementById('gainValueBadge');
+    const outputVolumeSlider = document.getElementById('outputVolumeSlider');
+    const volValueBadge = document.getElementById('volValueBadge');
+    const activeGainPill = document.getElementById('activeGainPill');
+    const activeVolPill = document.getElementById('activeVolPill');
+    const clipPill = document.getElementById('clipPill');
+    const sampleRateLabel = document.getElementById('sampleRateLabel');
+    const latencyLabel = document.getElementById('latencyLabel');
+    const highPassToggle = document.getElementById('highPassToggle');
+    const clarityToggle = document.getElementById('clarityToggle');
+    const echoCancellationToggle = document.getElementById('echoCancellationToggle');
+    const noiseSuppressionToggle = document.getElementById('noiseSuppressionToggle');
+    const visualizerCanvas = document.getElementById('visualizerCanvas');
+    const idleOverlay = document.getElementById('idleOverlay');
+    const vizWaveMode = document.getElementById('vizWaveMode');
+    const vizFreqMode = document.getElementById('vizFreqMode');
+    const vuMeterFill = document.getElementById('vuMeterFill');
+    const peakHoldIndicator = document.getElementById('peakHoldIndicator');
+    const dbReadout = document.getElementById('dbReadout');
+    const sinkIdNotice = document.getElementById('sinkIdNotice');
+    const outputSupportNotice = document.getElementById('outputSupportNotice');
+
+    const canvasCtx = visualizerCanvas.getContext('2d');
+
+    /* Check setSinkId browser support */
+    const supportsSetSinkId = 'setSinkId' in HTMLMediaElement.prototype;
+    if (!supportsSetSinkId) {
+      sinkIdNotice.classList.remove('hidden');
+      outputSupportNotice.textContent = 'Gestito dal sistema';
+    }
+
+    /* Enumerate Audio Hardware Devices */
+    async function enumerateAudioDevices() {
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        
+        // Save current selections
+        const currInput = audioInputSelect.value || state.selectedInputDeviceId;
+        const currOutput = audioOutputSelect.value || state.selectedOutputDeviceId;
+
+        audioInputSelect.innerHTML = '';
+        audioOutputSelect.innerHTML = '';
+
+        let micIndex = 1;
+        let speakerIndex = 1;
+
+        // Default options
+        const defaultInputOption = document.createElement('option');
+        defaultInputOption.value = '';
+        defaultInputOption.textContent = 'Microfono Predefinito (Telefono / Auricolari)';
+        audioInputSelect.appendChild(defaultInputOption);
+
+        const defaultOutputOption = document.createElement('option');
+        defaultOutputOption.value = '';
+        defaultOutputOption.textContent = 'Uscita Predefinita di Sistema';
+        audioOutputSelect.appendChild(defaultOutputOption);
+
+        devices.forEach(device => {
+          const opt = document.createElement('option');
+          opt.value = device.deviceId;
+
+          if (device.kind === 'audioinput') {
+            const label = device.label || `Microfono ${micIndex++}`;
+            const isBluetooth = /bluetooth|bt|cuffie|auricolare|airpods|buds/i.test(label);
+            opt.textContent = isBluetooth ? `🎧 ${label} (Bluetooth/Cuffie)` : `🎤 ${label}`;
+            audioInputSelect.appendChild(opt);
+          } else if (device.kind === 'audiooutput') {
+            const label = device.label || `Altoparlante / Cuffie ${speakerIndex++}`;
+            const isBluetooth = /bluetooth|bt|cuffie|auricolare|airpods|buds/i.test(label);
+            opt.textContent = isBluetooth ? `🎧 ${label} (Bluetooth)` : `🔊 ${label}`;
+            audioOutputSelect.appendChild(opt);
+          }
+        });
+
+        // Restore selections if available
+        if (currInput && Array.from(audioInputSelect.options).some(o => o.value === currInput)) {
+          audioInputSelect.value = currInput;
+        }
+        if (currOutput && Array.from(audioOutputSelect.options).some(o => o.value === currOutput)) {
+          audioOutputSelect.value = currOutput;
+        }
+
+        state.selectedInputDeviceId = audioInputSelect.value;
+        state.selectedOutputDeviceId = audioOutputSelect.value;
+
+      } catch (err) {
+        console.error('Errore durante l\'enumerazione dei dispositivi:', err);
+      }
+    }
+
+    /* Initialize and Start Audio Pipeline */
+    async function startAudioEngine() {
+      try {
+        // Request Permissions & Stream
+        const constraints = {
+          audio: {
+            deviceId: state.selectedInputDeviceId ? { exact: state.selectedInputDeviceId } : undefined,
+            echoCancellation: echoCancellationToggle.checked,
+            noiseSuppression: noiseSuppressionToggle.checked,
+            autoGainControl: false, // Disattivato per consentire amplificazione manuale precisa
+            latency: { ideal: 0.005 }, // Richiesta bassissima latenza
+          }
+        };
+
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        state.inputStream = stream;
+
+        // Create or Resume AudioContext with lowest latency
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        state.audioCtx = new AudioContextClass({
+          latencyHint: 'interactive'
+        });
+
+        if (state.audioCtx.state === 'suspended') {
+          await state.audioCtx.resume();
+        }
+
+        // 1. Source Node from Microphone Stream
+        state.sourceNode = state.audioCtx.createMediaStreamSource(stream);
+
+        // 2. High-pass filter (anti-rumble / low-end cut at 120Hz)
+        state.highPassFilter = state.audioCtx.createBiquadFilter();
+        state.highPassFilter.type = 'highpass';
+        state.highPassFilter.frequency.value = highPassToggle.checked ? 120 : 10;
+        state.highPassFilter.Q.value = 0.7;
+
+        // 3. Speech Clarity Peak EQ (boost at 2500Hz)
+        state.speechFilter = state.audioCtx.createBiquadFilter();
+        state.speechFilter.type = 'peaking';
+        state.speechFilter.frequency.value = 2500;
+        state.speechFilter.gain.value = clarityToggle.checked ? 4 : 0; // +4dB boost
+        state.speechFilter.Q.value = 1.0;
+
+        // 4. Mic Preamp / Gain Node (0x to 6x)
+        state.micGainNode = state.audioCtx.createGain();
+        state.micGainNode.gain.value = parseFloat(micGainSlider.value);
+
+        // 5. Analyser Node for Visualizers & VU Meter
+        state.analyserNode = state.audioCtx.createAnalyser();
+        state.analyserNode.fftSize = 1024;
+        state.analyserNode.smoothingTimeConstant = 0.8;
+
+        // 6. Master Output Gain Node
+        state.masterGainNode = state.audioCtx.createGain();
+        state.masterGainNode.gain.value = parseFloat(outputVolumeSlider.value);
+
+        // 7. Graph Routing:
+        // Source -> HighPass -> SpeechEQ -> MicGain -> Analyser -> MasterGain -> Destination
+        state.sourceNode.connect(state.highPassFilter);
+        state.highPassFilter.connect(state.speechFilter);
+        state.speechFilter.connect(state.micGainNode);
+        state.micGainNode.connect(state.analyserNode);
+        state.analyserNode.connect(state.masterGainNode);
+
+        // Handle routing to selected audio output device via Audio element destination or direct destination
+        if (supportsSetSinkId && state.selectedOutputDeviceId) {
+          const destinationStream = state.audioCtx.createMediaStreamDestination();
+          state.masterGainNode.connect(destinationStream);
+
+          if (!state.audioElement) {
+            state.audioElement = new Audio();
+          }
+          state.audioElement.srcObject = destinationStream.stream;
+          await state.audioElement.setSinkId(state.selectedOutputDeviceId);
+          state.audioElement.play().catch(e => console.warn("Errore riproduzione sink:", e));
+        } else {
+          state.masterGainNode.connect(state.audioCtx.destination);
+        }
+
+        // Update UI State
+        state.isRunning = true;
+        updateUIState(true);
+
+        // Latency and Sample Rate stats
+        sampleRateLabel.textContent = `Sample Rate: ${(state.audioCtx.sampleRate / 1000).toFixed(1)} kHz`;
+        const estLatency = ((state.audioCtx.baseLatency || 0.01) * 1000).toFixed(1);
+        latencyLabel.textContent = `Latenza: ~${estLatency} ms`;
+
+        // Start Canvas Visualizer & VU Meter Loop
+        idleOverlay.classList.add('hidden');
+        renderVisualizerLoop();
+
+        // Refresh enumerated devices now that label access is granted
+        await enumerateAudioDevices();
+
+      } catch (err) {
+        console.error('Impossibile accedere al microfono:', err);
+        showModal('Accesso Microfono Negato', 'Non è stato possibile accedere al microfono selezionato. Assicurati di aver concesso i permessi del microfono al browser e che nessun\'altra app lo stia occupando.');
+        stopAudioEngine();
+      }
+    }
+
+    /* Stop Audio Pipeline and Release Hardware */
+    function stopAudioEngine() {
+      if (state.rafId) {
+        cancelAnimationFrame(state.rafId);
+        state.rafId = null;
+      }
+
+      if (state.inputStream) {
+        state.inputStream.getTracks().forEach(track => track.stop());
+        state.inputStream = null;
+      }
+
+      if (state.audioElement) {
+        state.audioElement.pause();
+        state.audioElement.srcObject = null;
+      }
+
+      if (state.audioCtx) {
+        state.audioCtx.close().catch(() => {});
+        state.audioCtx = null;
+      }
+
+      state.isRunning = false;
+      updateUIState(false);
+      resetMeters();
+      idleOverlay.classList.remove('hidden');
+    }
+
+    /* Update Status UI Elements */
+    function updateUIState(running) {
+      if (running) {
+        toggleEngineBtn.classList.remove('bg-cyan-500', 'hover:bg-cyan-400');
+        toggleEngineBtn.classList.add('bg-rose-500', 'hover:bg-rose-400');
+        toggleBtnText.textContent = 'FERMA ASCOLTO';
+        playIcon.classList.add('hidden');
+        stopIcon.classList.remove('hidden');
+
+        statusDot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-ping';
+        statusText.textContent = 'In Ascolto Real-Time';
+        statusText.className = 'text-emerald-400 font-bold';
+      } else {
+        toggleEngineBtn.classList.remove('bg-rose-500', 'hover:bg-rose-400');
+        toggleEngineBtn.classList.add('bg-cyan-500', 'hover:bg-cyan-400');
+        toggleBtnText.textContent = 'AVVIA ASCOLTO MICROFONO';
+        playIcon.classList.remove('hidden');
+        stopIcon.classList.add('hidden');
+
+        statusDot.className = 'w-2 h-2 rounded-full bg-slate-500';
+        statusText.textContent = 'Disattivato';
+        statusText.className = 'text-slate-400';
+
+        clipPill.className = 'mt-1 px-2.5 py-0.5 rounded text-[11px] font-bold font-mono bg-dark-800 text-slate-500 border border-dark-700';
+        clipPill.textContent = 'OK';
+      }
+    }
+
+    function resetMeters() {
+      vuMeterFill.style.width = '0%';
+      peakHoldIndicator.style.opacity = '0';
+      dbReadout.innerHTML = '-&infin; dB';
+      // Clear visualizer
+      resizeCanvas();
+      canvasCtx.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
+    }
+
+    /* Responsive Canvas Resizing */
+    function resizeCanvas() {
+      const rect = visualizerCanvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      visualizerCanvas.width = rect.width * dpr;
+      visualizerCanvas.height = rect.height * dpr;
+      canvasCtx.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', () => {
+      if (state.isRunning) resizeCanvas();
+    });
+
+    /* Visualizer & VU Meter Animation Loop (60 FPS) */
+    function renderVisualizerLoop() {
+      if (!state.isRunning || !state.analyserNode) return;
+
+      resizeCanvas();
+      const rect = visualizerCanvas.getBoundingClientRect();
+      const width = rect.width;
+      const height = rect.height;
+
+      const bufferLength = state.analyserNode.frequencyBinCount;
+      const timeData = new Uint8Array(bufferLength);
+      const freqData = new Uint8Array(bufferLength);
+
+      state.analyserNode.getByteTimeDomainData(timeData);
+      state.analyserNode.getByteFrequencyData(freqData);
+
+      // 1. Draw Canvas background & grid
+      canvasCtx.fillStyle = '#07090e';
+      canvasCtx.fillRect(0, 0, width, height);
+
+      // Subtle Grid Lines
+      canvasCtx.strokeStyle = 'rgba(38, 49, 76, 0.4)';
+      canvasCtx.lineWidth = 1;
+      canvasCtx.beginPath();
+      for (let x = 0; x < width; x += 40) {
+        canvasCtx.moveTo(x, 0);
+        canvasCtx.lineTo(x, height);
+      }
+      for (let y = 0; y < height; y += 30) {
+        canvasCtx.moveTo(0, y);
+        canvasCtx.lineTo(width, y);
+      }
+      canvasCtx.stroke();
+
+      // 2. Render Selected Visualizer Mode
+      if (state.vizMode === 'wave') {
+        // Smooth Oscilloscope Waveform
+        canvasCtx.lineWidth = 2.5;
+        const gradient = canvasCtx.createLinearGradient(0, 0, width, 0);
+        gradient.addColorStop(0, '#06b6d4');
+        gradient.addColorStop(0.5, '#22d3ee');
+        gradient.addColorStop(1, '#10b981');
+        canvasCtx.strokeStyle = gradient;
+        canvasCtx.beginPath();
+
+        const sliceWidth = width / bufferLength;
+        let x = 0;
+
+        for (let i = 0; i < bufferLength; i++) {
+          const v = timeData[i] / 128.0;
+          const y = (v * height) / 2;
+
+          if (i === 0) {
+            canvasCtx.moveTo(x, y);
+          } else {
+            canvasCtx.lineTo(x, y);
+          }
+          x += sliceWidth;
+        }
+        canvasCtx.stroke();
+
+      } else {
+        // Frequency Bars Spectrum
+        const barWidth = (width / (bufferLength / 2.5));
+        let barX = 0;
+
+        for (let i = 0; i < bufferLength / 2.5; i++) {
+          const barHeight = (freqData[i] / 255) * height;
+          
+          const grad = canvasCtx.createLinearGradient(0, height, 0, height - barHeight);
+          grad.addColorStop(0, '#06b6d4');
+          grad.addColorStop(0.7, '#10b981');
+          grad.addColorStop(1, '#f59e0b');
+
+          canvasCtx.fillStyle = grad;
+          canvasCtx.fillRect(barX, height - barHeight, Math.max(barWidth - 1.5, 1), barHeight);
+          barX += barWidth;
+        }
+      }
+
+      // 3. Compute RMS and Peak for VU Meter
+      let sumSquares = 0;
+      let peakSample = 0;
+      for (let i = 0; i < bufferLength; i++) {
+        const norm = (timeData[i] - 128) / 128;
+        sumSquares += norm * norm;
+        const absVal = Math.abs(norm);
+        if (absVal > peakSample) peakSample = absVal;
+      }
+
+      const rms = Math.sqrt(sumSquares / bufferLength);
+      // Approximate decibels (-60dB to 0dB)
+      const db = 20 * Math.log10(rms || 0.0001);
+      const clampedDb = Math.max(-60, Math.min(0, db));
+      const percentage = ((clampedDb + 60) / 60) * 100;
+
+      // Update VU Meter Bar
+      vuMeterFill.style.width = `${Math.min(percentage, 100)}%`;
+
+      // Update Peak Hold
+      if (percentage > state.peakVal) {
+        state.peakVal = percentage;
+        peakHoldIndicator.style.left = `${Math.min(percentage, 99)}%`;
+        peakHoldIndicator.style.opacity = '1';
+
+        clearTimeout(state.peakTimer);
+        state.peakTimer = setTimeout(() => {
+          state.peakVal = 0;
+          peakHoldIndicator.style.opacity = '0';
+        }, 1200);
+      }
+
+      // Display dB readout & clipping alert
+      if (clampedDb <= -59) {
+        dbReadout.innerHTML = '-&infin; dB';
+      } else {
+        dbReadout.innerHTML = `${clampedDb.toFixed(1)} dB`;
+      }
+
+      // Check clipping (peak close to 1.0)
+      if (peakSample >= 0.96) {
+        clipPill.className = 'mt-1 px-2.5 py-0.5 rounded text-[11px] font-bold font-mono bg-rose-500 text-white animate-pulse';
+        clipPill.textContent = 'CLIPPING!';
+      } else if (clampedDb > -6) {
+        clipPill.className = 'mt-1 px-2.5 py-0.5 rounded text-[11px] font-bold font-mono bg-amber-500/20 text-amber-300 border border-amber-500/40';
+        clipPill.textContent = 'ALTO';
+      } else {
+        clipPill.className = 'mt-1 px-2.5 py-0.5 rounded text-[11px] font-bold font-mono bg-dark-800 text-emerald-400 border border-emerald-800/30';
+        clipPill.textContent = 'OK';
+      }
+
+      state.rafId = requestAnimationFrame(renderVisualizerLoop);
+    }
+
+    /* Controls Event Listeners */
+
+    // Start / Stop Toggle
+    toggleEngineBtn.addEventListener('click', () => {
+      if (!state.isRunning) {
+        startAudioEngine();
+      } else {
+        stopAudioEngine();
+      }
+    });
+
+    // Mic Gain Slider (0x to 6x Boost)
+    micGainSlider.addEventListener('input', (e) => {
+      const val = parseFloat(e.target.value);
+      gainValueBadge.textContent = `${val.toFixed(2)}x (${Math.round(val * 100)}%)`;
+      activeGainPill.textContent = `${val.toFixed(1)}x`;
+
+      if (state.micGainNode && state.audioCtx) {
+        state.micGainNode.gain.setTargetAtTime(val, state.audioCtx.currentTime, 0.015);
+      }
+    });
+
+    // Reset Gain Shortcut
+    resetGainBtn.addEventListener('click', () => {
+      micGainSlider.value = 1;
+      micGainSlider.dispatchEvent(new Event('input'));
+    });
+
+    // Output Volume Slider
+    outputVolumeSlider.addEventListener('input', (e) => {
+      const val = parseFloat(e.target.value);
+      const percentage = Math.round(val * 100);
+      volValueBadge.textContent = `${percentage}%`;
+      activeVolPill.textContent = `${percentage}%`;
+
+      if (state.masterGainNode && state.audioCtx) {
+        state.masterGainNode.gain.setTargetAtTime(val, state.audioCtx.currentTime, 0.015);
+      }
+    });
+
+    // Mute Logic
+    function toggleMute() {
+      if (!state.isMuted) {
+        state.previousVolume = parseFloat(outputVolumeSlider.value) || 0.8;
+        outputVolumeSlider.value = 0;
+        state.isMuted = true;
+        quickMuteBtn.classList.add('bg-rose-600', 'text-white');
+        muteBtn.textContent = 'Riattiva';
+      } else {
+        outputVolumeSlider.value = state.previousVolume;
+        state.isMuted = false;
+        quickMuteBtn.classList.remove('bg-rose-600', 'text-white');
+        muteBtn.textContent = 'Muto';
+      }
+      outputVolumeSlider.dispatchEvent(new Event('input'));
+    }
+
+    muteBtn.addEventListener('click', toggleMute);
+    quickMuteBtn.addEventListener('click', toggleMute);
+
+    // Filter Toggles
+    highPassToggle.addEventListener('change', () => {
+      if (state.highPassFilter && state.audioCtx) {
+        const freq = highPassToggle.checked ? 120 : 10;
+        state.highPassFilter.frequency.setTargetAtTime(freq, state.audioCtx.currentTime, 0.02);
+      }
+    });
+
+    clarityToggle.addEventListener('change', () => {
+      if (state.speechFilter && state.audioCtx) {
+        const boost = clarityToggle.checked ? 4 : 0;
+        state.speechFilter.gain.setTargetAtTime(boost, state.audioCtx.currentTime, 0.02);
+      }
+    });
+
+    // Visualizer Mode Switchers
+    vizWaveMode.addEventListener('click', () => {
+      state.vizMode = 'wave';
+      vizWaveMode.className = 'px-2.5 py-1 rounded-md font-medium text-cyan-400 bg-dark-800 shadow-sm transition';
+      vizFreqMode.className = 'px-2.5 py-1 rounded-md font-medium text-slate-400 hover:text-slate-200 transition';
+    });
+
+    vizFreqMode.addEventListener('click', () => {
+      state.vizMode = 'freq';
+      vizFreqMode.className = 'px-2.5 py-1 rounded-md font-medium text-cyan-400 bg-dark-800 shadow-sm transition';
+      vizWaveMode.className = 'px-2.5 py-1 rounded-md font-medium text-slate-400 hover:text-slate-200 transition';
+    });
+
+    // Dynamic Device Switching
+    audioInputSelect.addEventListener('change', async () => {
+      state.selectedInputDeviceId = audioInputSelect.value;
+      if (state.isRunning) {
+        // Re-initialize with new device
+        stopAudioEngine();
+        await startAudioEngine();
+      }
+    });
+
+    audioOutputSelect.addEventListener('change', async () => {
+      state.selectedOutputDeviceId = audioOutputSelect.value;
+      if (supportsSetSinkId && state.audioElement) {
+        try {
+          await state.audioElement.setSinkId(state.selectedOutputDeviceId);
+        } catch (e) {
+          console.warn("Cambio sink fallito:", e);
+        }
+      }
+    });
+
+    refreshDevicesBtn.addEventListener('click', async () => {
+      refreshDevicesBtn.classList.add('animate-spin');
+      await enumerateAudioDevices();
+      setTimeout(() => refreshDevicesBtn.classList.remove('animate-spin'), 600);
+    });
+
+    // Listen for system hardware plug / unplug (e.g. Bluetooth connection)
+    if (navigator.mediaDevices && navigator.mediaDevices.addEventListener) {
+      navigator.mediaDevices.addEventListener('devicechange', async () => {
+        await enumerateAudioDevices();
+      });
+    }
+
+    /* In-App Modal Dialog (No window.alert) */
+    function showModal(title, message) {
+      const modal = document.createElement('div');
+      modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in';
+      modal.innerHTML = `
+        <div class="bg-dark-900 border border-dark-700 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+          <div class="flex items-center gap-3 text-rose-400">
+            <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <h3 class="text-base font-bold text-white">${title}</h3>
+          </div>
+          <p class="text-sm text-slate-300 leading-relaxed">${message}</p>
+          <div class="flex justify-end pt-2">
+            <button class="px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-dark-950 font-bold text-sm transition">
+              Ho capito
+            </button>
+          </div>
+        </div>
+      `;
+      modal.querySelector('button').addEventListener('click', () => modal.remove());
+      document.body.appendChild(modal);
+    }
+
+    // Initial enumeration on load
+    window.addEventListener('DOMContentLoaded', () => {
+      enumerateAudioDevices();
+    });
+  </script>
+</body>
+</html>
